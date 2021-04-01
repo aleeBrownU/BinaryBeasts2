@@ -98,3 +98,4 @@ else
 end
 
 
+disp('Thanks for playing.')
