@@ -1,0 +1,250 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+
+"""
+
+"""
+import random
+import numpy as np
+
+print('Hi. This is the Iowa Gambling Task')
+print('In this task, you will start out with $5000, and your goal is to earn as much money as possible.')
+print('You will be presented with four card decks. When you draw a card from a deck, you will receive a monetary reward.')
+print('The amount of money you earn may differ between decks. There is also a chance for a penalty to occur.')
+print('This monetary penalty will deduct money. The amount of money deducted may differ between decks')
+print('') #line break
+print('You will draw a total of 100 cards. Earn the most amount of money with those 100 cards.')
+print('We will start now:')
+
+# Actual Task Section
+
+#shuffle desk to have different decks be better or worse every time you run the task
+deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]])
+print(deck_list)
+np.random.shuffle(deck_list)
+print(deck_list)
+print(deck_list[1,:])
+
+
+
+initial = 5000 #initial money
+money = initial #used later as the running money count
+prob = 0.5 #probability of GETTING a deduction (range from 0 to 1)
+Aplus = deck_list[0,0]  #when you pick on the card deck, you add this much money
+Bplus = deck_list[1,0] 
+Cplus = deck_list[2,0] 
+Dplus = deck_list[3,0] 
+Aminus = deck_list[0,1]  #Penalty amount you get deducted for each deck
+Bminus = deck_list[1,1] 
+Cminus = deck_list[2,1] 
+Dminus = deck_list[3,1] 
+
+print('You currently have $',money) #displays money amount
+
+for round in range(1,11): #number of card rounds. Will bump up to 100 later
+  good_input = 0 
+  while good_input < 1: #to ensure that the correct input is given
+      user = int(input("Pick a deck: A(1), B(2), C(3), D(4) (enter the number)\n")) 
+      if user == 1 or user == 2 or user == 3 or user == 4:
+          good_input = 1 
+      else:
+          print('Not a valid input. Please try again.\n')
+        
+    
+  
+  if random.uniform(0,1)<=prob: #determines if penalty should occur
+      penalty = True 
+  else:
+      penalty = False 
+    
+  
+  
+  if user == 1: #allocates money changes and displays messages about 
+      toAdd = Aplus+random.randint(-25,25)
+      print('You earned $',toAdd)
+      money = money+toAdd  #adds the money
+      if penalty: #if a penalty is to be given
+          print('A penalty was given. You lost $',Aminus)
+          money = money-Aminus  #subtracts the money
+        
+      print('You currently have $',money) #displays money amount
+  elif user == 2:
+      toAdd = Bplus+random.randint(-25,25)
+      print('You earned $',toAdd)
+      money = money+toAdd
+      if penalty:
+          print('A penalty was given. You lost $',Bminus)
+          money = money-Bminus 
+        
+      print('You currently have $',money) #displays money amount
+  elif user == 3:
+      toAdd = Cplus+random.randint(-25,25)
+      print('You earned $',toAdd)
+      money = money+toAdd 
+      if penalty:
+          print('A penalty was given. You lost $',Cminus)
+          money = money-Cminus 
+        
+      print('You currently have $',money) #displays money amount
+  elif user == 4:
+      toAdd = Dplus+random.randint(-25,25)
+      print('You earned $',toAdd)
+      money = money+toAdd 
+      if penalty:
+          print('A penalty was given. You lost $',Dminus)
+          money = money-Dminus 
+        
+      print('You currently have $',money) #displays money amount
+    
+  
+  
+
+
+
+# Data Section
+
+print('Your total at the end of this task was $',money)
+net_earnings = money-initial 
+print('Your total earnings overall for this task was $',net_earnings)
+if net_earnings < 0:
+  print('Too bad. You lost more than you gambled for.')
+elif net_earnings == 0:
+  print('Wow. You neither won nor lost money.')
+else:
+  print('Congrats. You earned money today...virtually. Non-redeemable.')
+
+
+
+print('Thanks for playing.')
+
+"""
+import random
+import numpy as np
+from tkinter import Tk, Label, Frame, Entry, Button, Text
+from PIL import ImageTk, Image
+
+
+window = Tk()
+
+IGTtext = Text(window,width=75, height=25)
+welcomemsg= """Hi. This is the Iowa Gambling Task
+'In this task, you will start out with $5000, and your goal is to earn as much money as possible.
+You will be presented with four card decks. When you draw a card from a deck, you will receive a monetary reward.
+The amount of money you earn may differ between decks. There is also a chance for a penalty to occur.
+This monetary penalty will deduct money. The amount of money deducted may differ between deck
+You will draw a total of 100 cards. Earn the most amount of money with those 100 cards.
+We will start now:"""
+
+IGTtext.pack()
+IGTtext.insert(0.0, welcomemsg)
+
+deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]])
+np.random.shuffle(deck_list)
+
+
+global money
+
+initial = 5000 #initial money
+money = initial #used later as the running money count
+prob = 0.5 #probability of GETTING a deduction (range from 0 to 1)
+Aplus = deck_list[0,0]  #when you pick on the card deck, you add this much money
+Bplus = deck_list[1,0] 
+Cplus = deck_list[2,0] 
+Dplus = deck_list[3,0] 
+Aminus = deck_list[0,1]  #Penalty amount you get deducted for each deck
+Bminus = deck_list[1,1] 
+Cminus = deck_list[2,1] 
+Dminus = deck_list[3,1] 
+
+###Bonus and penalty for each deck
+
+
+
+deck_img = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Documents/MATLAB/download.jpeg"))
+img_label = Label(image=deck_img)
+#img_label.pack(pady=20)
+
+
+
+count = 0
+
+def functionA(): #function Button A
+        if random.uniform(0,1)<=prob: #determines if penalty should occur
+              penalty = True 
+        else:
+            penalty = False
+
+        global money
+        bonAtext = Text(window,width=75, height=25)
+        bonAtext.pack()
+        bonAtext.insert(0.0, "You earned $" + str(Aplus))
+        toAdd = Aplus
+        money +=toAdd  #adds the money
+        scorelabel.config(text = "You currently have $" + str(money))
+        if penalty: #if a penalty is to be given
+          penAtext = Text(window,width=75, height=25)
+          penAtext.pack()
+          penAtext.insert(0.0, "Your penalty was $" + str(Aminus))
+          toSub = Aminus
+          money = money - toSub #adds the money
+        scorelabel.config(text = "You currently have $" + str(money))
+        labelA = Label(window, text="Button A")
+        labelA.pack()
+def functionB():
+    if random.uniform(0,1)<=prob: #determines if penalty should occur
+              penalty = True 
+    else:
+            penalty = False
+    global money
+    bonBtext = Text(window,width=75, height=25)
+    bonBtext.pack()
+    bonBtext.insert(0.0, "You earned $" + str(Bplus))
+    toAdd = Bplus
+    money +=toAdd  #adds the money
+    scorelabel.config(text = "You currently have $" + str(money))
+    if penalty: #if a penalty is to be given
+    penAtext = Text(window,width=75, height=25)
+    penAtext.pack()
+    penAtext.insert(0.0, "Your penalty was $" + str(Aminus))
+    toSub = Aminus
+    money = money - toSub #adds the money
+    scorelabel.config(text = "You currently have $" + str(money))
+        
+    labelB = Label(window, text="Button B")
+    labelB.pack()
+    
+    
+def functionC():
+    labelC = Label(window, text="Button C")
+    labelC.pack()
+
+
+    labelC = tk.Label(window, text="Button A")
+    labelC.pack()
+def functionD():
+    labelD = Label(window, text="Button D")
+    labelD.pack()
+
+A = Button(window, image=deck_img, command=functionA)
+B = Button(window, image=deck_img, command=functionB)
+C = Button(window, image=deck_img, command=functionC)
+D = Button(window, image=deck_img, command=functionD)
+quitB = Button(window, text="Quit", command=window.quit)
+
+
+window.bind('q', functionB)
+
+A.pack()
+B.pack()
+C.pack()
+D.pack()
+quitB.pack()
+
+scorelabel = Label(window, text="You currently have $" + str(money))
+scorelabel.place(x=100, y=100)
+window.mainloop()
+
+
