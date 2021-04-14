@@ -121,15 +121,19 @@ else:
 print('Thanks for playing.')
 
 """
-import random
+iimport random
 import numpy as np
-from tkinter import Tk, Label, Frame, Entry, Button, Text
+from tkinter import Tk, Label, Frame, Entry, Button, Text, BOTTOM, LEFT, TOP, RIGHT, END
 from PIL import ImageTk, Image
 
 
 window = Tk()
+topframe = Frame(window)
+topframe.pack()
+bottomframe = Frame(window)
+bottomframe.pack(side=BOTTOM)
 
-IGTtext = Text(window,width=75, height=25)
+IGTtext = Text(topframe,width=75, height=25)
 welcomemsg= """Hi. This is the Iowa Gambling Task
 'In this task, you will start out with $5000, and your goal is to earn as much money as possible.
 You will be presented with four card decks. When you draw a card from a deck, you will receive a monetary reward.
@@ -138,7 +142,7 @@ This monetary penalty will deduct money. The amount of money deducted may differ
 You will draw a total of 100 cards. Earn the most amount of money with those 100 cards.
 We will start now:"""
 
-IGTtext.pack()
+IGTtext.pack(side=LEFT)
 IGTtext.insert(0.0, welcomemsg)
 
 deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]])
@@ -168,83 +172,136 @@ img_label = Label(image=deck_img)
 #img_label.pack(pady=20)
 
 
-
+global count
 count = 0
+bonAtext = Text(topframe,width=75, height=25)
+bonAtext.pack(side=LEFT)
 
 def functionA(): #function Button A
+        bonAtext.delete(0.0, END)
         if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
         else:
             penalty = False
 
         global money
-        bonAtext = Text(window,width=75, height=25)
-        bonAtext.pack()
+        
         bonAtext.insert(0.0, "You earned $" + str(Aplus))
         toAdd = Aplus
         money +=toAdd  #adds the money
         scorelabel.config(text = "You currently have $" + str(money))
         if penalty: #if a penalty is to be given
-          penAtext = Text(window,width=75, height=25)
-          penAtext.pack()
-          penAtext.insert(0.0, "Your penalty was $" + str(Aminus))
+          bonAtext.insert(0.0, "Your penalty was $" + str(Aminus))
           toSub = Aminus
           money = money - toSub #adds the money
         scorelabel.config(text = "You currently have $" + str(money))
-        labelA = Label(window, text="Button A")
-        labelA.pack()
+        #labelA = Label(window, text="Button A")
+        #labelA.pack()
+        global count
+        count +=1
+        countlabel.config(text = "Click#" + str(count))
+        
 def functionB():
+    bonAtext.delete(0.0, END)
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
     else:
             penalty = False
     global money
-    bonBtext = Text(window,width=75, height=25)
-    bonBtext.pack()
-    bonBtext.insert(0.0, "You earned $" + str(Bplus))
+    #bonBtext = Text(window,width=75, height=25)
+    #bonBtext.pack()
+    bonAtext.insert(0.0, "You earned $" + str(Bplus))
     toAdd = Bplus
     money +=toAdd  #adds the money
     scorelabel.config(text = "You currently have $" + str(money))
     if penalty: #if a penalty is to be given
-    penAtext = Text(window,width=75, height=25)
-    penAtext.pack()
-    penAtext.insert(0.0, "Your penalty was $" + str(Aminus))
-    toSub = Aminus
-    money = money - toSub #adds the money
-    scorelabel.config(text = "You currently have $" + str(money))
-        
-    labelB = Label(window, text="Button B")
-    labelB.pack()
+        #penBtext = Text(window,width=75, height=25)
+        #penBtext.pack()
+        bonAtext.insert(0.0, "Your penalty was $" + str(Bminus))
+        toSub = Bminus
+        money = money - toSub #adds the money
+        scorelabel.config(text = "You currently have $" + str(money))
+    global count
+    count +=1
+    countlabel.config(text = "Click#" + str(count))
+    #labelB = Label(window, text="Button B")
+    #labelB.pack()
     
     
 def functionC():
-    labelC = Label(window, text="Button C")
-    labelC.pack()
+    bonAtext.delete(0.0, END)
+    if random.uniform(0,1)<=prob: #determines if penalty should occur
+              penalty = True 
+    else:
+            penalty = False
+    global money
+    #bonCtext = Text(window,width=75, height=25)
+    #bonCtext.pack()
+    bonAtext.insert(0.0, "You earned $" + str(Cplus))
+    toAdd = Cplus
+    money +=toAdd  #adds the money
+    scorelabel.config(text = "You currently have $" + str(money))
+    if penalty: #if a penalty is to be given
+        #penCtext = Text(window,width=75, height=25)
+        #penCtext.pack()
+        bonAtext.insert(0.0, "Your penalty was $" + str(Cminus))
+        toSub = Cminus
+        money = money - toSub #adds the money
+    scorelabel.config(text = "You currently have $" + str(money))
+    global count
+    count +=1
+    countlabel.config(text = "Click#" + str(count))        
+    #labelC = Label(window, text="Button C")
+    #labelC.pack()
 
 
-    labelC = tk.Label(window, text="Button A")
-    labelC.pack()
+
 def functionD():
-    labelD = Label(window, text="Button D")
-    labelD.pack()
+    bonAtext.delete(0.0, END)
+    if random.uniform(0,1)<=prob: #determines if penalty should occur
+              penalty = True 
+    else:
+            penalty = False
+    global money
+    #bonDtext = Text(window,width=75, height=25)
+    #bonDtext.pack()
+    bonAtext.insert(0.0, "You earned $" + str(Dplus))
+    toAdd = Dplus
+    money +=toAdd  #adds the money
+    scorelabel.config(text = "You currently have $" + str(money))
+    if penalty: #if a penalty is to be given
+        #penDtext = Text(window,width=75, height=25)
+        #penDtext.pack()
+        bonAtext.insert(0.0, "Your penalty was $" + str(Dminus))
+        toSub = Dminus
+        money = money - toSub #adds the money
+    scorelabel.config(text = "You currently have $" + str(money))
+    global count
+    count +=1
+    countlabel.config(text = "Click#" + str(count))
+        
+    #labelD = Label(window, text="Button D")
+    #labelD.pack()
 
-A = Button(window, image=deck_img, command=functionA)
-B = Button(window, image=deck_img, command=functionB)
-C = Button(window, image=deck_img, command=functionC)
-D = Button(window, image=deck_img, command=functionD)
-quitB = Button(window, text="Quit", command=window.quit)
+A = Button(bottomframe, image=deck_img, command=functionA)
+B = Button(bottomframe, image=deck_img, command=functionB)
+C = Button(bottomframe, image=deck_img, command=functionC)
+D = Button(bottomframe, image=deck_img, command=functionD)
+quitB = Button(topframe, text="Quit", command=window.quit)
 
 
 window.bind('q', functionB)
 
-A.pack()
-B.pack()
-C.pack()
-D.pack()
+A.pack(side = LEFT)
+B.pack(side=LEFT)
+C.pack(side=LEFT)
+D.pack(side=LEFT)
 quitB.pack()
 
-scorelabel = Label(window, text="You currently have $" + str(money))
-scorelabel.place(x=100, y=100)
+countlabel = Label(topframe, text="Click#" + str(count))
+countlabel.pack(side=LEFT)
+scorelabel = Label(topframe, text="You currently have $" + str(money))
+scorelabel.pack(side=LEFT)
 window.mainloop()
 
 
