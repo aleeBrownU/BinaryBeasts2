@@ -7,127 +7,20 @@ This is a temporary script file.
 """
 
 """
+import time
+import pandas as pd
+import matplotlib as mlp
+import matplotlib.pyplot as plt
 import random
-import numpy as np
-
-print('Hi. This is the Iowa Gambling Task')
-print('In this task, you will start out with $5000, and your goal is to earn as much money as possible.')
-print('You will be presented with four card decks. When you draw a card from a deck, you will receive a monetary reward.')
-print('The amount of money you earn may differ between decks. There is also a chance for a penalty to occur.')
-print('This monetary penalty will deduct money. The amount of money deducted may differ between decks')
-print('') #line break
-print('You will draw a total of 100 cards. Earn the most amount of money with those 100 cards.')
-print('We will start now:')
-
-# Actual Task Section
-
-#shuffle desk to have different decks be better or worse every time you run the task
-deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]])
-print(deck_list)
-np.random.shuffle(deck_list)
-print(deck_list)
-print(deck_list[1,:])
-
-
-
-initial = 5000 #initial money
-money = initial #used later as the running money count
-prob = 0.5 #probability of GETTING a deduction (range from 0 to 1)
-Aplus = deck_list[0,0]  #when you pick on the card deck, you add this much money
-Bplus = deck_list[1,0] 
-Cplus = deck_list[2,0] 
-Dplus = deck_list[3,0] 
-Aminus = deck_list[0,1]  #Penalty amount you get deducted for each deck
-Bminus = deck_list[1,1] 
-Cminus = deck_list[2,1] 
-Dminus = deck_list[3,1] 
-
-print('You currently have $',money) #displays money amount
-
-for round in range(1,11): #number of card rounds. Will bump up to 100 later
-  good_input = 0 
-  while good_input < 1: #to ensure that the correct input is given
-      user = int(input("Pick a deck: A(1), B(2), C(3), D(4) (enter the number)\n")) 
-      if user == 1 or user == 2 or user == 3 or user == 4:
-          good_input = 1 
-      else:
-          print('Not a valid input. Please try again.\n')
-        
-    
-  
-  if random.uniform(0,1)<=prob: #determines if penalty should occur
-      penalty = True 
-  else:
-      penalty = False 
-    
-  
-  
-  if user == 1: #allocates money changes and displays messages about 
-      toAdd = Aplus+random.randint(-25,25)
-      print('You earned $',toAdd)
-      money = money+toAdd  #adds the money
-      if penalty: #if a penalty is to be given
-          print('A penalty was given. You lost $',Aminus)
-          money = money-Aminus  #subtracts the money
-        
-      print('You currently have $',money) #displays money amount
-  elif user == 2:
-      toAdd = Bplus+random.randint(-25,25)
-      print('You earned $',toAdd)
-      money = money+toAdd
-      if penalty:
-          print('A penalty was given. You lost $',Bminus)
-          money = money-Bminus 
-        
-      print('You currently have $',money) #displays money amount
-  elif user == 3:
-      toAdd = Cplus+random.randint(-25,25)
-      print('You earned $',toAdd)
-      money = money+toAdd 
-      if penalty:
-          print('A penalty was given. You lost $',Cminus)
-          money = money-Cminus 
-        
-      print('You currently have $',money) #displays money amount
-  elif user == 4:
-      toAdd = Dplus+random.randint(-25,25)
-      print('You earned $',toAdd)
-      money = money+toAdd 
-      if penalty:
-          print('A penalty was given. You lost $',Dminus)
-          money = money-Dminus 
-        
-      print('You currently have $',money) #displays money amount
-    
-  
-  
-
-
-
-# Data Section
-
-print('Your total at the end of this task was $',money)
-net_earnings = money-initial 
-print('Your total earnings overall for this task was $',net_earnings)
-if net_earnings < 0:
-  print('Too bad. You lost more than you gambled for.')
-elif net_earnings == 0:
-  print('Wow. You neither won nor lost money.')
-else:
-  print('Congrats. You earned money today...virtually. Non-redeemable.')
-
-
-
-print('Thanks for playing.')
-
-"""
-iimport random
 import numpy as np
 from tkinter import Tk, Label, Frame, Entry, Button, Text, BOTTOM, LEFT, TOP, RIGHT, END
 from PIL import ImageTk, Image
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 window = Tk()
+w, h = window.winfo_screenwidth(), window.winfo_screenheight()
+window.geometry("%dx%d+0+0" % (w, h))
 topframe = Frame(window)
 topframe.pack()
 bottomframe = Frame(window)
@@ -147,7 +40,8 @@ IGTtext.insert(0.0, welcomemsg)
 
 deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]])
 np.random.shuffle(deck_list)
-
+global userbest
+userbest = 0
 
 global money
 
@@ -162,22 +56,80 @@ Aminus = deck_list[0,1]  #Penalty amount you get deducted for each deck
 Bminus = deck_list[1,1] 
 Cminus = deck_list[2,1] 
 Dminus = deck_list[3,1] 
+Adiff = Aplus - Aminus
+Bdiff = Bplus - Bminus
+Cdiff = Cplus - Cminus
+Ddiff = Dplus - Dminus
 
+global bestdeck
+bestdeck = 0
+
+if Adiff>Bdiff and Adiff>Cdiff and Adiff>Ddiff:
+    bestdeck=1
+elif Bdiff>Cdiff and Bdiff>Ddiff:
+    bestdeck =2
+elif Cdiff>Ddiff:
+    bestdeck=3
+else:
+    bestdeck=4
 ###Bonus and penalty for each deck
 
 
-
-deck_img = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Documents/MATLAB/download.jpeg"))
+#bgimg = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Downloads/wavebgrnd.png"))
+#bglabel = Label(image=bhimg)
+deck_img = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Documents/GitHub/BinaryBeasts2/deckimg.jpeg"))
 img_label = Label(image=deck_img)
 #img_label.pack(pady=20)
 
 
+
+
 global count
-count = 0
+global countA
+global countB
+global countC
+global countD
+countA = 0
+countB = 0
+countC = 0
+countD = 0
+count = 1
+
+global starttime 
+
+
+buttonlist = []
+reactiontimes = []
+starttime = None
 bonAtext = Text(topframe,width=75, height=25)
 bonAtext.pack(side=LEFT)
 
+def start():
+    global starttime
+    starttime = time.time() # this is when your program starts
+    print(starttime)
+    
+
 def functionA(): #function Button A
+       buttonlist.append("A")
+       global starttime
+       print(starttime)
+       finaltime = time.time()
+       elapsed_time = finaltime - starttime
+      
+       
+       print(elapsed_time)
+       reactiontimes.append(elapsed_time)
+       starttime = finaltime
+       global count
+       if count>9:
+            C["state"] = "disabled"
+            D["state"] = "disabled"
+            A["state"] = "disabled"
+            B["state"] = "disabled"
+            #results["state"] = "enabled"
+       else:
+        #results["state"] = "disabled"
         bonAtext.delete(0.0, END)
         if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
@@ -197,11 +149,31 @@ def functionA(): #function Button A
         scorelabel.config(text = "You currently have $" + str(money))
         #labelA = Label(window, text="Button A")
         #labelA.pack()
-        global count
+        global countA
+        countA +=1
         count +=1
         countlabel.config(text = "Click#" + str(count))
+       
         
 def functionB():
+   buttonlist.append("B")
+   global starttime
+   print(starttime)
+   finaltime = time.time()
+   elapsed_time = finaltime - starttime
+
+   print(elapsed_time)
+   reactiontimes.append(elapsed_time)
+   starttime = finaltime
+   global count
+   if count>9:
+            C["state"] = "disabled"
+            D["state"] = "disabled"
+            A["state"] = "disabled"
+            B["state"] = "disabled"
+            #results["state"] = "enabled"
+   else:
+    #results["state"] = "disabled"
     bonAtext.delete(0.0, END)
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
@@ -221,7 +193,8 @@ def functionB():
         toSub = Bminus
         money = money - toSub #adds the money
         scorelabel.config(text = "You currently have $" + str(money))
-    global count
+    global countB
+    countB +=1
     count +=1
     countlabel.config(text = "Click#" + str(count))
     #labelB = Label(window, text="Button B")
@@ -229,6 +202,24 @@ def functionB():
     
     
 def functionC():
+   buttonlist.append("C")
+   global starttime
+   print(starttime)
+   finaltime = time.time()
+   elapsed_time = finaltime - starttime
+       
+   print(elapsed_time)
+   reactiontimes.append(elapsed_time)
+   starttime = finaltime
+   global count
+   if count>9:
+            C["state"] = "disabled"
+            D["state"] = "disabled"
+            A["state"] = "disabled"
+            B["state"] = "disabled"
+            #results["state"] = "enabled"
+   else:
+    #results["state"] = "disabled"
     bonAtext.delete(0.0, END)
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
@@ -248,16 +239,37 @@ def functionC():
         toSub = Cminus
         money = money - toSub #adds the money
     scorelabel.config(text = "You currently have $" + str(money))
-    global count
+    global countC
+    countC +=1
     count +=1
     countlabel.config(text = "Click#" + str(count))        
     #labelC = Label(window, text="Button C")
     #labelC.pack()
+    \
 
 
 
 def functionD():
+   buttonlist.append("D")
+   global starttime
+   print(starttime)
+   finaltime = time.time()
+   elapsed_time = finaltime - starttime
+       
+   print(elapsed_time)
+   reactiontimes.append(elapsed_time)
+   starttime = finaltime
+   global count
+   if count>9:
+            C["state"] = "disabled"
+            D["state"] = "disabled"
+            A["state"] = "disabled"
+            B["state"] = "disabled"
+            #results["state"] = "disabled"
+   else:
+    #results["state"] = "disabled"
     bonAtext.delete(0.0, END)
+    
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
     else:
@@ -276,32 +288,86 @@ def functionD():
         toSub = Dminus
         money = money - toSub #adds the money
     scorelabel.config(text = "You currently have $" + str(money))
-    global count
+    global countD
+    countD += 1
     count +=1
     countlabel.config(text = "Click#" + str(count))
         
     #labelD = Label(window, text="Button D")
     #labelD.pack()
 
+def functionres():
+    
+    fig = plt.figure(figsize=(1,2), dpi=100)
+    ax = fig.add_axes([0,0,1,1])
+    buttons = ['A', 'B', 'C', 'D']
+    bclick = [countA, countB, countC, countD]
+    ax.bar(buttons,bclick)
+    graph = FigureCanvasTkAgg(fig, bottomframe)
+    
+    graph.get_tk_widget().pack()
+    
+    
+    print(reactiontimes)
+    print(buttonlist)
+    finaldata = [[buttonlist[i], reactiontimes[i]] for i in range(len(reactiontimes))]
+    fig2 = plt.figure(figsize=(1,2), dpi=100)
+    rxnbar = fig2.add_axes([0,0,1,1])
+    trials = [1,2,3,4,5,6,7,8,9,10]
+    
+    rxnbar.bar(trials,reactiontimes)
+    graph2 = FigureCanvasTkAgg(fig2, bottomframe)
+    
+    graph2.get_tk_widget().pack()
+    print(finaldata)
+    if userbest==bestdeck:
+        resulttext = Text(topframe,width=25, height=10)
+        textwin = """You picked the best deck"""
+        resulttext.pack(side=LEFT)
+        resulttext.insert(0.0, textwin)
+    else:
+        resulttext2 = Text(topframe,width=25, height=10)
+        textloss = """You picked a losing deck"""
+        resulttext2.pack(side=LEFT)
+        resulttext2.insert(0.0, textloss)
+
+
+if countA>countB and countA>countC and countA>countD:
+    userbest=1
+elif countB>countC and countB>countD:
+    userbest=2
+elif countC>countD:
+    userbest=3
+else:
+    userbest=4    
+startbutton = Button(topframe, text="Start", command=start)
 A = Button(bottomframe, image=deck_img, command=functionA)
 B = Button(bottomframe, image=deck_img, command=functionB)
 C = Button(bottomframe, image=deck_img, command=functionC)
 D = Button(bottomframe, image=deck_img, command=functionD)
+results = Button(topframe, text="Click to view results", command=functionres)
 quitB = Button(topframe, text="Quit", command=window.quit)
 
-
-window.bind('q', functionB)
 
 A.pack(side = LEFT)
 B.pack(side=LEFT)
 C.pack(side=LEFT)
 D.pack(side=LEFT)
+results.pack(side=TOP)
+startbutton.pack(side=LEFT)
 quitB.pack()
+
+
 
 countlabel = Label(topframe, text="Click#" + str(count))
 countlabel.pack(side=LEFT)
 scorelabel = Label(topframe, text="You currently have $" + str(money))
 scorelabel.pack(side=LEFT)
 window.mainloop()
+"""
+import time
+start = time.clock() # this is when your program starts
+finish = time.clock() # this is after the user clicks the button
 
+elapsed_time = finish - start # this is their 'reaction time' """
 
