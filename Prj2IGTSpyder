@@ -7,36 +7,57 @@ This is a temporary script file.
 """
 
 """
+import sys
+import os
 import time
 import pandas as pd
 import matplotlib as mlp
 import matplotlib.pyplot as plt
 import random
 import numpy as np
-from tkinter import Tk, Label, Frame, Entry, Button, Text, BOTTOM, LEFT, TOP, RIGHT, END
+from tkinter import Tk, Canvas, Label, Frame, Entry, Button, Text, BOTTOM, LEFT, TOP, RIGHT, END
 from PIL import ImageTk, Image
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 window = Tk()
-w, h = window.winfo_screenwidth(), window.winfo_screenheight()
-window.geometry("%dx%d+0+0" % (w, h))
-topframe = Frame(window)
-topframe.pack()
-bottomframe = Frame(window)
-bottomframe.pack(side=BOTTOM)
+window.resizable(width=False, height=False)
+#w, h = window.winfo_screenwidth(), window.winfo_screenheight()
+window.geometry("%dx%d+0+0" % (1296, 782))
+#topframe = Frame(window)
+#topframe.pack()
+#bottomframe = Frame(window)
+#bottomframe.pack(side=BOTTOM)
+# Add image file
+bgimg = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Downloads/wavebgrnd.png"))
+#bglabel = Label(image=bhimg)
+welcomemsg= """Hi! This is the Iowa Gambling Task
+'In this task, you will start out with $5000, and your goal is to 
+earn as much money as possible. You will be presented with four 
+card decks. When you draw a card from a deck, you will receive 
+a monetary reward. The amount of money you earn may differ 
+between decks. There is also a chance for a penalty to occur.
+This monetary penalty will deduct money. The amount of money 
+deducted may differ between deck. You will draw a total of 100 
+cards. Earn the most amount of money with those 100 cards.
+Click on the Start button to begin."""
+  
+# Create Canvas
+maincanvas = Canvas(window, width = 1296,
+                 height = 728, bd=0, highlightthickness=0)
+  
+maincanvas.pack(fill = "both", expand = True)
+  
+# Display image
+maincanvas.create_image( 0, 0, image = bgimg, 
+                     anchor = "nw")
+maincanvas.create_text(39,123,anchor="nw",fill="red",font="Times 20 italic bold",
+                        text=welcomemsg)
+#IGTtext = Text(window,width=75, height=25)
 
-IGTtext = Text(topframe,width=75, height=25)
-welcomemsg= """Hi. This is the Iowa Gambling Task
-'In this task, you will start out with $5000, and your goal is to earn as much money as possible.
-You will be presented with four card decks. When you draw a card from a deck, you will receive a monetary reward.
-The amount of money you earn may differ between decks. There is also a chance for a penalty to occur.
-This monetary penalty will deduct money. The amount of money deducted may differ between deck
-You will draw a total of 100 cards. Earn the most amount of money with those 100 cards.
-We will start now:"""
-
-IGTtext.pack(side=LEFT)
-IGTtext.insert(0.0, welcomemsg)
+#IGTtext_window = maincanvas.create_window(19, 123, anchor="nw", window=IGTtext)
+#IGTtext.pack(side=LEFT)
+#IGTtext.insert(0.0, welcomemsg)
 
 deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]])
 np.random.shuffle(deck_list)
@@ -75,8 +96,7 @@ else:
 ###Bonus and penalty for each deck
 
 
-#bgimg = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Downloads/wavebgrnd.png"))
-#bglabel = Label(image=bhimg)
+
 deck_img = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Documents/GitHub/BinaryBeasts2/deckimg.jpeg"))
 img_label = Label(image=deck_img)
 #img_label.pack(pady=20)
@@ -97,12 +117,15 @@ count = 1
 
 global starttime 
 
-
+maxtrials = 9
 buttonlist = []
 reactiontimes = []
 starttime = None
-bonAtext = Text(topframe,width=75, height=25)
-bonAtext.pack(side=LEFT)
+bonAtext = Text(window,width=25, height=5, background="black", foreground="green", font="Times 17")
+bonAtext_window = maincanvas.create_window(584, 180, anchor="nw", window=bonAtext)
+pentext = Text(window,width=25, height=5, background="black", foreground="red", font="Times 17")
+pentext_window = maincanvas.create_window(584, 270, anchor="nw", window=pentext)
+#bonAtext.pack(side=LEFT)
 
 def start():
     global starttime
@@ -122,7 +145,7 @@ def functionA(): #function Button A
        reactiontimes.append(elapsed_time)
        starttime = finaltime
        global count
-       if count>9:
+       if count>maxtrials:
             C["state"] = "disabled"
             D["state"] = "disabled"
             A["state"] = "disabled"
@@ -131,6 +154,7 @@ def functionA(): #function Button A
        else:
         #results["state"] = "disabled"
         bonAtext.delete(0.0, END)
+        pentext.delete(0.0, END)
         if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
         else:
@@ -143,7 +167,7 @@ def functionA(): #function Button A
         money +=toAdd  #adds the money
         scorelabel.config(text = "You currently have $" + str(money))
         if penalty: #if a penalty is to be given
-          bonAtext.insert(0.0, "Your penalty was $" + str(Aminus))
+          pentext.insert(0.0, "Your penalty was $" + str(Aminus))
           toSub = Aminus
           money = money - toSub #adds the money
         scorelabel.config(text = "You currently have $" + str(money))
@@ -152,7 +176,7 @@ def functionA(): #function Button A
         global countA
         countA +=1
         count +=1
-        countlabel.config(text = "Click#" + str(count))
+        countlabel.config(text = "Trial#" + str(count))
        
         
 def functionB():
@@ -166,7 +190,7 @@ def functionB():
    reactiontimes.append(elapsed_time)
    starttime = finaltime
    global count
-   if count>9:
+   if count>maxtrials:
             C["state"] = "disabled"
             D["state"] = "disabled"
             A["state"] = "disabled"
@@ -175,6 +199,7 @@ def functionB():
    else:
     #results["state"] = "disabled"
     bonAtext.delete(0.0, END)
+    pentext.delete(0.0, END)
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
     else:
@@ -189,14 +214,14 @@ def functionB():
     if penalty: #if a penalty is to be given
         #penBtext = Text(window,width=75, height=25)
         #penBtext.pack()
-        bonAtext.insert(0.0, "Your penalty was $" + str(Bminus))
+        pentext.insert(0.0, "Your penalty was $" + str(Bminus))
         toSub = Bminus
         money = money - toSub #adds the money
         scorelabel.config(text = "You currently have $" + str(money))
     global countB
     countB +=1
     count +=1
-    countlabel.config(text = "Click#" + str(count))
+    countlabel.config(text = "Trial#" + str(count))
     #labelB = Label(window, text="Button B")
     #labelB.pack()
     
@@ -212,7 +237,7 @@ def functionC():
    reactiontimes.append(elapsed_time)
    starttime = finaltime
    global count
-   if count>9:
+   if count>maxtrials:
             C["state"] = "disabled"
             D["state"] = "disabled"
             A["state"] = "disabled"
@@ -221,6 +246,7 @@ def functionC():
    else:
     #results["state"] = "disabled"
     bonAtext.delete(0.0, END)
+    pentext.delete(0.0, END)
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
     else:
@@ -235,14 +261,14 @@ def functionC():
     if penalty: #if a penalty is to be given
         #penCtext = Text(window,width=75, height=25)
         #penCtext.pack()
-        bonAtext.insert(0.0, "Your penalty was $" + str(Cminus))
+        pentext.insert(0.0, "Your penalty was $" + str(Cminus))
         toSub = Cminus
         money = money - toSub #adds the money
     scorelabel.config(text = "You currently have $" + str(money))
     global countC
     countC +=1
     count +=1
-    countlabel.config(text = "Click#" + str(count))        
+    countlabel.config(text = "Trial#" + str(count))        
     #labelC = Label(window, text="Button C")
     #labelC.pack()
     \
@@ -260,7 +286,7 @@ def functionD():
    reactiontimes.append(elapsed_time)
    starttime = finaltime
    global count
-   if count>9:
+   if count>maxtrials:
             C["state"] = "disabled"
             D["state"] = "disabled"
             A["state"] = "disabled"
@@ -269,6 +295,7 @@ def functionD():
    else:
     #results["state"] = "disabled"
     bonAtext.delete(0.0, END)
+    pentext.delete(0.0, END)
     
     if random.uniform(0,1)<=prob: #determines if penalty should occur
               penalty = True 
@@ -284,54 +311,72 @@ def functionD():
     if penalty: #if a penalty is to be given
         #penDtext = Text(window,width=75, height=25)
         #penDtext.pack()
-        bonAtext.insert(0.0, "Your penalty was $" + str(Dminus))
+        pentext.insert(0.0, "Your penalty was $" + str(Dminus))
         toSub = Dminus
         money = money - toSub #adds the money
     scorelabel.config(text = "You currently have $" + str(money))
     global countD
     countD += 1
     count +=1
-    countlabel.config(text = "Click#" + str(count))
+    countlabel.config(text = "Trial#" + str(count))
         
     #labelD = Label(window, text="Button D")
     #labelD.pack()
-
+global graph_window
 def functionres():
+    A.destroy()
+    B.destroy()
+    C.destroy()
+    D.destroy()
+    pentext.destroy()
+    bonAtext.destroy()
+    countlabel.destroy()
+    scorelabel.destroy()
     
-    fig = plt.figure(figsize=(1,2), dpi=100)
-    ax = fig.add_axes([0,0,1,1])
-    buttons = ['A', 'B', 'C', 'D']
+    
+    
+    fig = plt.figure(figsize=(3,3), dpi=100)
+    ax = fig.add_subplot(111)
+    buttons = ['Deck A', 'Deck B', 'Deck C', 'Deck D']
     bclick = [countA, countB, countC, countD]
     ax.bar(buttons,bclick)
-    graph = FigureCanvasTkAgg(fig, bottomframe)
+    graph = FigureCanvasTkAgg(fig, window)
+    graph_window = maincanvas.create_window(161,443, anchor="nw", window=graph.get_tk_widget())
     
-    graph.get_tk_widget().pack()
+    #graph.get_tk_widget().pack()
     
     
     print(reactiontimes)
     print(buttonlist)
     finaldata = [[buttonlist[i], reactiontimes[i]] for i in range(len(reactiontimes))]
-    fig2 = plt.figure(figsize=(1,2), dpi=100)
-    rxnbar = fig2.add_axes([0,0,1,1])
+    fig2 = plt.figure(figsize=(3,3), dpi=100)
+    rxnbar = fig2.add_subplot(111)
     trials = [1,2,3,4,5,6,7,8,9,10]
     
     rxnbar.bar(trials,reactiontimes)
-    graph2 = FigureCanvasTkAgg(fig2, bottomframe)
+    graph2 = FigureCanvasTkAgg(fig2, window)
     
-    graph2.get_tk_widget().pack()
+    graph2_window = maincanvas.create_window(500,443, anchor="nw", window=graph2.get_tk_widget())
     print(finaldata)
     if userbest==bestdeck:
-        resulttext = Text(topframe,width=25, height=10)
-        textwin = """You picked the best deck"""
-        resulttext.pack(side=LEFT)
-        resulttext.insert(0.0, textwin)
+        textwin = """Congratulations! You picked the best deck! """
+        maincanvas.create_text(836,443,anchor="nw",fill="green",font="Times 20 italic bold",
+                        text=textwin)
+ 
+        
     else:
-        resulttext2 = Text(topframe,width=25, height=10)
-        textloss = """You picked a losing deck"""
-        resulttext2.pack(side=LEFT)
-        resulttext2.insert(0.0, textloss)
-
-
+        
+        textloss = """Oh no! You picked a losing deck – Please try again"""
+        maincanvas.create_text(836,443,anchor="nw",fill="red",font="Times 20 italic bold",
+                        text=textloss)
+     
+def functionrestart():
+    count = 0
+    
+def functionquit():
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
+    
 if countA>countB and countA>countC and countA>countD:
     userbest=1
 elif countB>countC and countB>countD:
@@ -340,34 +385,40 @@ elif countC>countD:
     userbest=3
 else:
     userbest=4    
-startbutton = Button(topframe, text="Start", command=start)
-A = Button(bottomframe, image=deck_img, command=functionA)
-B = Button(bottomframe, image=deck_img, command=functionB)
-C = Button(bottomframe, image=deck_img, command=functionC)
-D = Button(bottomframe, image=deck_img, command=functionD)
-results = Button(topframe, text="Click to view results", command=functionres)
-quitB = Button(topframe, text="Quit", command=window.quit)
+startbutton = Button(window, text="Start", bd=0, highlightthickness=0, command=start)
+start_window = maincanvas.create_window(1155, 275, anchor="nw", window=startbutton)
+A = Button(maincanvas, image=deck_img,bd=0, highlightthickness=0, command=functionA)
+A_window = maincanvas.create_window(161,490, anchor="nw", window=A)
 
 
-A.pack(side = LEFT)
-B.pack(side=LEFT)
-C.pack(side=LEFT)
-D.pack(side=LEFT)
-results.pack(side=TOP)
-startbutton.pack(side=LEFT)
-quitB.pack()
+B = Button(maincanvas, image=deck_img, bd=0, highlightthickness=0, command=functionB)
+B_window = maincanvas.create_window(411,490, anchor="nw", window=B)
+C = Button(maincanvas, image=deck_img, bd=0, highlightthickness=0, command=functionC)
+C_window = maincanvas.create_window(661,490, anchor="nw", window=C)
+D = Button(maincanvas, image=deck_img, bd=0, highlightthickness=0, command=functionD)
+D_window = maincanvas.create_window(911,490, anchor="nw", window=D)
+results = Button(window, text="Click to view results", bd=0, highlightthickness=0, command=functionres)
+results_window = maincanvas.create_window(1130, 335, anchor="nw", window=results)
+quitB = Button(window, text="Quit", bd=0, highlightthickness=0, command=functionquit)
+quit_window = maincanvas.create_window(1155, 215, anchor="nw", window=quitB)
+restart = Button(window, text="Restart", bd=0, highlightthickness=0, command=functionrestart)
+restart_window = maincanvas.create_window(1130, 449, anchor="nw", window=restart)
+
+
+#A.pack(side = LEFT)
+#B.pack(side=LEFT)
+#C.pack(side=LEFT)
+#D.pack(side=LEFT)
+#results.pack(side=TOP)
+#startbutton.pack(side=LEFT)
+#quitB.pack()
 
 
 
-countlabel = Label(topframe, text="Click#" + str(count))
-countlabel.pack(side=LEFT)
-scorelabel = Label(topframe, text="You currently have $" + str(money))
-scorelabel.pack(side=LEFT)
+countlabel = Label(window,width=25, height=5, background="black", foreground="white", text="Trial#" + str(count))
+countwindow = maincanvas.create_window(584,375, anchor="nw", window=countlabel)
+
+scorelabel = Label(window,width=25, height=5, background="black", foreground="white", text="You currently have $" + str(money))
+scorewindow = maincanvas.create_window(584,90, anchor="nw", window=scorelabel)
+#scorelabel.pack(side=LEFT)
 window.mainloop()
-"""
-import time
-start = time.clock() # this is when your program starts
-finish = time.clock() # this is after the user clicks the button
-
-elapsed_time = finish - start # this is their 'reaction time' """
-
