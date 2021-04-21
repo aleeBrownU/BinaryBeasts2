@@ -26,7 +26,7 @@ maincanvas = Canvas(window, width = 1296, height = 728, bd=0, highlightthickness
 maincanvas.pack(fill = "both", expand = True) #once canvas is created, it needs to be placed on the window
   
 
-bgimg = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Downloads/wavebgrnd.png")) #importing background image
+bgimg = ImageTk.PhotoImage(Image.open("wavebgrnd.png")) #importing background image
 welcomemsg= """Hi! This is the Iowa Gambling Task
 'In this task, you will start out with $5000, and your goal is to 
 earn as much money as possible. You will be presented with four 
@@ -84,7 +84,8 @@ else: # if previous decks were not the best deck, Deck D must be the best
 
 
 #importing image of a deck to be used a button, and then creating a label for it
-deck_img = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Documents/GitHub/BinaryBeasts2/deckimg.jpeg"))
+#deck_img = ImageTk.PhotoImage(Image.open("/Users/kushpatel/Documents/GitHub/BinaryBeasts2/deckimg.jpeg"))
+deck_img = ImageTk.PhotoImage(Image.open("deckimg.jpeg"))
 img_label = Label(image=deck_img)
 
 
