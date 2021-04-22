@@ -5,7 +5,28 @@ Created on Tue Apr 13 23:11:17 2021
 
 @author: kushpatel
 """
+#GENERAL TIME COMMITMENTS
+#We met all tpogether initially to code the skeleton which took up 5 hours
+#Adrian and Jack spent 1 hour debugging the initial skeleton
+#Kush spent 3 hours learning tutorials for Matlab GUI
+#Jack spent 3 hours learning tutorials for Psychtoolbox
+#We all swpent 3 hours figuring out which Python app to use (found Anaconda from Piazza)
+#Spent 1 hour researching Iowa Gambling Task
+#Spent 1 hour transferring skeleton from Matlab to Python
+#All members spent 4 hours recruiting PsychoPy into a Spyder environment (had to learn online). We ran into some issues 
+#with running Anaconda.
+#All members spent 4 hours working with PsychoPy, but it was laggy and the tutorials online were not deep and we realize we should switch to another GUI program
+#All members spent 6 hours learning tkinter from scratch (Codemy on Youtube was helpful)
+#Spent 2 hours having friends run the GUI to make sure there were no bugs. Spent 2 hours debugging after minor bugs were found.
+#Intially we did not have a canvas. We imported all widgets to window. But to place a backgroud image, we had to use a canvas widget.
+#But to place widgets onto canvas, we had to create separate windows and had to learn new code to fit all widgets onto canvas.
+#All members spent 5 hours researching tutorials for canvas widgets and implementing it.
+#Proposal editing took 2 hours in total from each members
+# other specific bours are commented in the code
+
+
 #importing all functions necessary for the code
+
 import sys
 import os
 import time
@@ -16,6 +37,7 @@ from tkinter import Tk, Canvas, Label, Button, Text, END
 from PIL import ImageTk, Image
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+#All members spent 1 hours creating window, canvas, and welcome message. Debugged by everyone.
 #create window
 window = Tk() #generating a window to place canvas and other widgets onto
 window.resizable(width=False, height=False) #making sure window cannot be resized as it will disrupt the canvas
@@ -34,14 +56,15 @@ card decks. When you draw a card from a deck, you will receive
 a monetary reward. The amount of money you earn may differ 
 between decks. There is also a chance for a penalty to occur.
 This monetary penalty will deduct money. The amount of money 
-deducted may differ between deck. You will draw a total of 15 
-cards. Earn the most amount of money with those 15 cards.
-Click on the Start button to begin.""" #welcome message to be displayed on the screen
+deducted may differ between deck. You will draw a total of 20 
+cards. Earn the most amount of money with those 20 cards.
+Click on the Start button to begin. View your results after you
+reach 20 trials.""" #welcome message to be displayed on the screen
   
 
 # Display image
 maincanvas.create_image( 0, 0, image = bgimg, anchor = "nw") #placing background image on the canvas
-maincanvas.create_text(39,123,anchor="nw",fill="red",font="Times 20 italic bold",text=welcomemsg)#placing welcome message on Canvas
+maincanvas.create_text(39,123,anchor="nw",fill="red",font="Times 18 italic bold",text=welcomemsg)#placing welcome message on Canvas
 
 #creating bonus and penalties for the four card decks
 deck_list = np.mat([[100, 250],[100,50],[50,50],[50,250]]) #creating an array where each item is the bonus and its corresponding penalty
@@ -52,7 +75,8 @@ userbest = 0 #initializing userbest variable, default is 0
 
 global money #global variable money will keep track of user's money after bonus and penalty is applied
 
-#Initial money, deck bonus and penalties
+#Creating variables done by all group members. 1 hour spent together
+#Initial money, deck bonus and penalties. Imported from skeleton
 initial = 5000 #initial money
 money = initial #used later as the running money count
 prob = 0.5 #probability of GETTING a penalty (range from 0 to 1)
@@ -69,6 +93,7 @@ Bdiff = Bplus - Bminus #Difference for deck B
 Cdiff = Cplus - Cminus #Difference for deck C
 Ddiff = Dplus - Dminus #Difference for deck D
 
+#picking best deck, coded along with picking user's best deck done below. Kush- 1 hours
 global bestdeck #global variable which picks the best deck
 bestdeck = 0 #initializing bestdeck
 #CODE to figure out the best deck
@@ -105,21 +130,21 @@ count = 0
 global starttime #global starttime will keep time of the time when user started session
 starttime = None #initializing starttime to be empty 
 
-maxtrials = 15 #number of trials experimenter wants. After maxtrials, GUI will be stopped
+maxtrials = 20 #number of trials experimenter wants. After maxtrials, GUI will be stopped
 buttonlist = [] #initializing an empty list to keep a record of decks user picks over the session
 reactiontimes = [] #initialzing an empty list to keep record of the reaction time to select buttons over the course of the session
-
+#creating additional widgets: spent 1 hour by Kush and Adrian.
 bonustext = Text(window,width=25, height=5, background="black", foreground="green", font="Times 17") #text widget to display bonus received from picking a deck
 bonustext_window = maincanvas.create_window(584, 180, anchor="nw", window=bonustext) #placing bonus text widget onto canvas
 pentext = Text(window,width=25, height=5, background="black", foreground="red", font="Times 17") # create text widget to display penalty received from clicking each button
 pentext_window = maincanvas.create_window(584, 270, anchor="nw", window=pentext) #place penalty text widget onto canvas
 
-
+#Reaction time used in the functions: Jack and Kush: 5 hours including tutorial and pseudocoding
 def start():
     global starttime
     starttime = time.time() #time when start button is pressed. This will start the program
 
-
+# functions to all decks took 3 hours in total from all group members including debugging
 def functionA(): #function Deck  A
       global count #importing global variable count
       
@@ -301,6 +326,8 @@ def functionD():
      count +=1#updates trial number by 1 for clicking on this deck
      countlabel.config(text = "Trial#" + str(count)) #displays the current trial number after user picks this deck
 
+#Data visualization- All members spent 3 hours researching tuorials and implementing code
+#Kush debugged for 1 hour.
 def functionres(): #function to view results\
    global count
     #destroy all buttons and text widgets to make room for the results
@@ -333,7 +360,7 @@ def functionres(): #function to view results\
 
     finaldata = [[buttonlist[i], reactiontimes[i]] for i in range(len(reactiontimes))] #final data which is an array containing list 
     #that specify button clicked for a particular trial and its corresponding reaction time
-    fig2 = plt.figure(figsize=(4.7,4), dpi=100) #make another figure
+    fig2 = plt.figure(figsize=(4.8,4), dpi=100) #make another figure
     rxnbar = fig2.add_subplot(111)#add to subplot to the figure
     rxnbar.set_xlabel('#Trial') #add x label
     rxnbar.set_ylabel('Reaction time(s)')#add y label
@@ -374,11 +401,12 @@ def functionres(): #function to view results\
         maincanvas.create_text(607,123, anchor="nw",fill="red",font="Times 20 italic bold",
                         text=textloss) #create text widget to be inserted in the canvas
 
-    
-def functionrestart(): #quit the function
+#  restart fcode was difficult to find on Google. We had many attempts. Group sepnt 1.5 hours figuring out these 2 lines of code
+def functionrestart(): #restart the function
     python = sys.executable
     os.execl(python, python, * sys.argv)
-    
+
+#All members spent 4-5 hours on creating widgets. Hardest part was to align everything correctly. Since there is no GUI builder, we had to manually pick coordinates
 #there is a two step process in creating buttons on tkinter
 #first is to create the button and then the button must be placed onto the canvas
 startbutton = Button(window, text="Start", bd=0, highlightthickness=0, command=start) #create start button and assign it to the function start
@@ -402,9 +430,8 @@ results_window = maincanvas.create_window(1155, 335, window=results) #create a r
 restart = Button(window, text="Restart", bd=0, highlightthickness=0, command=functionrestart) #create a quit button. Assign it to function quit
 restart_window = maincanvas.create_window(1155, 215, window=restart) #place quit button on canvas
 
-#restart = Button(window, text="Restart", bd=0, highlightthickness=0, command=functionrestart)
-#restart_window = maincanvas.create_window(1130, 449, anchor="nw", window=restart)
-
+#Trial and money count coded by Jack and Kush. Took 2 hours (including tkinter tutorial and pseudocode)
+#Adrian debugged count and money label for 1 hour
 countlabel = Label(window,width=25, height=5, background="black", foreground="white", text="Trial#" + str(count)) #count widget that will count the current trial#
 countwindow = maincanvas.create_window(584,375, anchor="nw", window=countlabel)#place count widget on canvas
 
